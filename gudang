@@ -131,9 +131,10 @@
                 let nama = document.getElementById("nama").value.trim();
                 let harga = document.getElementById("harga").value.trim();
                 let stok = document.getElementById("stok").value.trim();
+                let kategori = document.getElementById("kategori").value.trim();
                 const btn = document.getElementById("btnTambah");
 
-                if (!nama || !harga || !stok) {
+                if (!nama || !harga || !stok || !kategori) {
                     Swal.fire("Oops!", "Semua kolom wajib diisi", "warning");
                     return;
                 }
@@ -143,7 +144,7 @@
 
                 const { error } = await db
                     .from("produk")
-                    .insert([{ nama, harga, stok }]);
+                    .insert([{ nama, harga, stok, kategori }]);
                 btn.disabled = false;
                 btn.textContent = "Tambah";
 
@@ -159,6 +160,7 @@
                 document.getElementById("nama").value = "";
                 document.getElementById("harga").value = "";
                 document.getElementById("stok").value = "";
+                document.getElementById("kategori").value = "";
                 loadProduk();
             }
 
@@ -192,32 +194,35 @@
                 });
             }
 
-            async function editProduk(id, nama, harga, stok) {
+            async function editProduk(id, nama, harga, stok, kategori) {
                 const { value: formValues } = await Swal.fire({
                     title: "Edit Produk",
                     html: `<input id="swNama" class="swal2-input" value="${escapeHTML(
                         nama
                     )}">
          <input id="swHarga" type="number" class="swal2-input" value="${harga}">
-         <input id="swStok" type="number" class="swal2-input" value="${stok}">`,
+         <input id="swStok" type="number" class="swal2-input" value="${stok}">
+         <input id="swKategori" type="text" class="swal2-input" value="${kategori}">`,
                     focusConfirm: false,
                     preConfirm: () => {
                         return [
                             document.getElementById("swNama").value.trim(),
                             document.getElementById("swHarga").value.trim(),
                             document.getElementById("swStok").value.trim(),
+                            document.getElementById("swKategori").value.trim(),
                         ];
                     },
                 });
 
                 if (formValues) {
-                    const [newNama, newHarga, newStok] = formValues;
+                    const [newNama, newHarga, newStok, newKategori] = formValues;
                     const { error } = await db
                         .from("produk")
                         .update({
                             nama: newNama,
                             harga: newHarga,
                             stok: newStok,
+                            kategori: newKategori,
                         })
                         .eq("id", id);
 
