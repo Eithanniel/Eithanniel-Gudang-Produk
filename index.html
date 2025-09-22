@@ -45,7 +45,7 @@
                     <div class="col-md">
                         <input
                             type="text"
-                            id="category"
+                            id="kategori"
                             class="form-control"
                             placeholder="Kategori"
                         />
@@ -69,7 +69,6 @@
                         <th>Nama</th>
                         <th>Harga</th>
                         <th>Stok</th>
-                        <th>Kategori</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -121,13 +120,12 @@
         <td>${escapeHTML(item.nama)}</td>
         <td>Rp ${Number(item.harga).toLocaleString()}</td>
         <td>${item.stok}</td>
-        <td>${escapeHTML(item.category)}</td>
         <td>
           <button class="btn btn-warning btn-sm" onclick="editProduk(${
               item.id
           }, '${escapeHTML(item.nama)}', ${item.harga}, ${
                         item.stok
-                    }, '${escapeHTML(item.category)}')">Edit</button>
+                    })">Edit</button>
           <button class="btn btn-danger btn-sm" onclick="hapusProduk(${
               item.id
           })">Hapus</button>
@@ -141,10 +139,10 @@
                 let nama = document.getElementById("nama").value.trim();
                 let harga = document.getElementById("harga").value.trim();
                 let stok = document.getElementById("stok").value.trim();
-                let category = document.getElementById("category").value.trim();
+                let kategori = document.getElementById("kategori").value.trim();
                 const btn = document.getElementById("btnTambah");
 
-                if (!nama || !harga || !stok || !category) {
+                if (!nama || !harga || !stok || !kategori) {
                     Swal.fire("Oops!", "Semua kolom wajib diisi", "warning");
                     return;
                 }
@@ -154,7 +152,7 @@
 
                 const { error } = await db
                     .from("produk")
-                    .insert([{ nama, harga, stok, category }]);
+                    .insert([{ nama, harga, stok, kategori }]);
                 btn.disabled = false;
                 btn.textContent = "Tambah";
 
@@ -170,7 +168,7 @@
                 document.getElementById("nama").value = "";
                 document.getElementById("harga").value = "";
                 document.getElementById("stok").value = "";
-                document.getElementById("category").value = "";
+                document.getElementById("kategori").value = "";
                 loadProduk();
             }
 
@@ -204,7 +202,7 @@
                 });
             }
 
-            async function editProduk(id, nama, harga, stok, category) {
+            async function editProduk(id, nama, harga, stok, kategori) {
                 const { value: formValues } = await Swal.fire({
                     title: "Edit Produk",
                     html: `<input id="swNama" class="swal2-input" value="${escapeHTML(
@@ -212,30 +210,27 @@
                     )}">
          <input id="swHarga" type="number" class="swal2-input" value="${harga}">
          <input id="swStok" type="number" class="swal2-input" value="${stok}">
-         <input id="swCategory" class="swal2-input" value="${escapeHTML(
-             category
-         )}">`,
+         <input id="swKategori" type="text" class="swal2-input" value="${kategori}">`,
                     focusConfirm: false,
                     preConfirm: () => {
                         return [
                             document.getElementById("swNama").value.trim(),
                             document.getElementById("swHarga").value.trim(),
                             document.getElementById("swStok").value.trim(),
-                            document.getElementById("swCategory").value.trim(),
+                            document.getElementById("swKategori").value.trim(),
                         ];
                     },
                 });
 
                 if (formValues) {
-                    const [newNama, newHarga, newStok, newCategory] =
-                        formValues;
+                    const [newNama, newHarga, newStok, newKategori] = formValues;
                     const { error } = await db
                         .from("produk")
                         .update({
                             nama: newNama,
                             harga: newHarga,
                             stok: newStok,
-                            category: newCategory,
+                            kategori: newKategori,
                         })
                         .eq("id", id);
 
