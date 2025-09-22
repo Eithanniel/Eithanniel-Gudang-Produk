@@ -42,6 +42,14 @@
                             placeholder="Stok"
                         />
                     </div>
+                    <div class="col-md">
+                        <input
+                            type="text"
+                            id="kategori"
+                            class="form-control"
+                            placeholder="Kategori"
+                        />
+                    </div>
                     <div class="col-auto">
                         <button
                             id="btnTambah"
